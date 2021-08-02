@@ -3,3 +3,4 @@
 ## read data
 env_data <- readRDS('../data/environmentaldata.monthly.rds')
 head(env_data)
+tail(env_data)
