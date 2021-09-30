@@ -14,50 +14,18 @@ env_data_raw$vpdmin_kPa <- env_data_raw$vpdmin_hPa/10
 env_data_date <- env_data_raw %>% unite(col = "date", "year", "month", sep = ".", remove = FALSE)
 env_data_date$date <- as.numeric(env_data_date$date)
 
-# remove years 2016-2019 (no CRU data)
-env_data <- env_data_date %>% dplyr::filter(year < 2016)
+# add CO2
+co2_ppm <- read.csv('../data/nasa_co2_ppm.csv')
+env_data_co2 <- left_join(env_data_date, co2_ppm, by = "year")
+
+# remove years 2016-2019 (no CO2/CRU data)
+env_data <- env_data_co2 %>% dplyr::filter(year < 2012)
 
 ## load model
-source('../p_model/calc_optimal_vcmax.R')
-sourceDirectory('../p_model/functions', modifiedOnly = FALSE)
-
-source('../p_model/n_from_gas_exchange.R')
-
-### function to scale vcmax to different temperatures
-calc_vcmax_tresp_mult = function(tleaf, tmean, tref){
-  
-  temp <- tleaf + 273.15
-  Ha <- 71513
-  Hd <- 200000
-  adelS <- 668.39
-  bdelS <- -1.07
-  tmeanK <- tmean + 273.15
-  trefK <- tref + 273.15
-  R <- 8.314
-  kbeg <- exp(Ha*(temp - trefK) / (trefK * R * temp))
-  kend <- ((1 + exp((trefK * (adelS + bdelS * tmean) - Hd) / 
-                      (trefK * R))) / (1 + exp((temp * (adelS + bdelS * tmean) - Hd) / (temp * R))))
-  kbeg * kend
-  
-}
-
-### function to scale jmax to different temperatures
-calc_jmax_tresp_mult = function(tleaf, tmean, tref){
-  
-  temp <- tleaf + 273.15
-  Ha <- 49884
-  Hd <- 200000
-  adelS <- 659.7
-  bdelS <- -0.75
-  tmeanK <- tmean + 273.15
-  trefK <- tref + 273.15
-  R <- 8.314
-  kbeg <- exp(Ha * (temp - trefK) / (trefK * R * temp))
-  kend <- ((1 + exp((trefK * (adelS + bdelS * tmean) - Hd) / (trefK * R))) / 
-             (1 + exp((temp * (adelS + bdelS * tmean) - Hd) / (temp * R))))
-  kbeg * kend
-  
-}
+source('../models/calc_optimal_vcmax.R')
+sourceDirectory('../models/functions', modifiedOnly = FALSE)
+source('../models/LMA_revised.R')
+source('../models/n_from_gas_exchange.R')
 
 ## check CRU data
 
@@ -89,6 +57,21 @@ env_data$mc <- model_output$mc
 env_data$vcmax <- model_output$vcmax
 env_data$jmax <- model_output$jmax
 
+# average months per year above 0 Celsius (f)
+env_data_almont <- env_data %>% dplyr::filter(site == "almont")
+env_data_almont %>% dplyr::count(year)
+env_data_warm <- env_data_almont %>% dplyr::filter(tmean_c > 0)
+env_data_f <- env_data_warm %>% dplyr::count(year)
+f <- mean(env_data_f$n)/12
+
+# estimate LMA
+env_data$lma <- calc_lma(f = f, # fraction of time in growing season
+                         par = env_data$cru_par, # light absorbed in µmol m-2 s-1
+                         temperature = env_data$tmean_c, # temperature in C
+                         vpd_kpa = env_data$cru_vpd, # vpd in kpa
+                         z = env_data$elev_m, # elevation in m
+                         co2 = 400, # co2 in ppm
+)
 
 # add predicted vcmax to dataset
 env_data$vcmax25 <- model_output$vcmax / 
@@ -154,3 +137,4 @@ ggplot(env_data_summary, aes(x = year, y = vcmax_mean)) + geom_line(aes(color = 
 ggplot(env_data_summary, aes(x = year, y = jmax_mean)) + geom_line(aes(color = site))
 ggplot(env_data_summary, aes(x = year, y = grossphoto_mean)) + geom_line(aes(color = site))
 ggplot(env_data_summary, aes(x = year, y = netphoto_mean)) + geom_line(aes(color = site))
+
