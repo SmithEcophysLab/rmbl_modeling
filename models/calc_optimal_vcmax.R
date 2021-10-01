@@ -40,7 +40,8 @@ library(R.utils)
 # load necessary functions
 sourceDirectory('functions')
 
-calc_optimal_vcmax <- function(tg_c = 25, z = 0, vpdo = 1, cao = 400, paro = 800, q0 = 0.257, theta = 0.85){
+calc_optimal_vcmax <- function(tg_c = 25, z = 0, vpdo = 1, cao = 400, paro = 800, q0 = 0.257, theta = 0.85,
+                               f = 0.5){
 	
 	# constants
 	R <- 8.314
@@ -72,12 +73,56 @@ calc_optimal_vcmax <- function(tg_c = 25, z = 0, vpdo = 1, cao = 400, paro = 800
 	jvrat <- ((8 * theta * mc * omega) / (m * omega_star))     
 	jmax <- jvrat * vcmax
 	
+	vcmax25 <- vcmax / calc_tresp_mult(tg_c, tg_c, 25)
+	vpmax25 <- 0
+	jmax25 <- jmax / calc_jmax_tresp_mult(tg_c, tg_c, 25)
+	
+	# estimate LMA
+	lma <- calc_lma(f = f, par = paro, temperature = tg_c, vpd_kpa = vpdo, z = z, co2 = 400)
+	
+	# calculate gross photosynthesis
+	grossphoto <- vcmax * mc
+	
+	# calculate respiration
+	resp <- 0.15 * vcmax
+	
+	# calculate net photosynthesis
+	netphoto <- grossphoto - resp
+	
+	# calculate leaf N in rubisco from predicted vcmax
+	nrubisco <- fvcmax25_nrubisco(vcmax25)
+	
+	# calculate leaf N in bioenergetics from predicted jmax
+  nbioe <- fjmax25_nbioe(jmax25)
+	
+	# calculate leaf N in rubisco from predicted vpmax with PEP-specific constants
+	npep <- fvpmax25_npep(vpmax25)
+	
+	# calculate nitrogen in structural tissue from lma 
+	nstructure <- flma_nstructure(lma)
+	
+	# sum all leaf N predictions
+	nall <- nrubisco + nbioe + nstructure + npep
+	
+	# calculate leaf N used for photosynthesis
+	nphoto <- nrubisco + nbioe + npep
+	
+	# calculate the fraction of leaf N in rubisco out of all leaf N
+	nrubisco_frac <- nrubisco / nall
+	
+	# calculate the fraction of leaf N for photosynthesis out of all leaf N
+	nphoto_frac <- nphoto / nall
+
 	# output
 	results <- as.data.frame(cbind(tg_c, z, vpdo, cao, paro, q0, theta, c, par, patm, ca, vpd, chi, ci, km, 
-	                               gammastar, omega, m, mc, omega_star, vcmax, jvrat, jmax))
+	                               gammastar, omega, m, mc, omega_star, vcmax, jvrat, jmax, lma,
+	                               grossphoto, resp, netphoto, nrubisco, nbioe, npep, nstructure,
+	                               nall, nphoto, nrubisco_frac, nphoto_frac))
 	
 	colnames(results) <- c('tg_c', 'z', 'vpdo', 'cao', 'paro', 'q0', 'theta', 'c', 'par', 'patm', 'ca', 'vpd', 'chi', 'ci', 'km', 
-	                       'gammastar', 'omega', 'm', 'mc', 'omega_star', 'vcmax', 'jvrat', 'jmax')
+	                       'gammastar', 'omega', 'm', 'mc', 'omega_star', 'vcmax', 'jvrat', 'jmax', 'lma',
+	                       'grossphoto', 'resp', 'netphoto', 'nrubisco', 'nbioe', 'npep', 'nstructure',
+	                       'nall', 'nphoto', 'nrubisco_frac', 'nphoto_frac')
 	
 	results	
 	
