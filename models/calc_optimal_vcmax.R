@@ -66,7 +66,8 @@ calc_optimal_vcmax <- function(tg_c = 25, z = 0, vpdo = 1, cao = 400, paro = 800
 	omega_star <- (1 + (omega) - sqrt((1 + (omega))^2 - (4 * theta * omega))) 
 	
 	# calculate q0 using Bernacchi et al. (2003) temperature response (set to 0.257 at 25C)
-	q0 = -0.0805 + (0.022 * tg_c) - (0.00034 * tg_c * tg_c)
+	# q0 = -0.0805 + (0.022 * tg_c) - (0.00034 * tg_c * tg_c)
+	q0 = 0.25 # Bernacchi only goes down to 10C and these are much colder >> probably shouldnt use!
 	
 	# calculate vcmax and jmax	
 	vcmax <- ((q0 * par * m) / mc) * (omega_star / (8 * theta))	          
@@ -78,7 +79,8 @@ calc_optimal_vcmax <- function(tg_c = 25, z = 0, vpdo = 1, cao = 400, paro = 800
 	jmax25 <- jmax / calc_jmax_tresp_mult(tg_c, tg_c, 25)
 	
 	# estimate LMA
-	lma <- calc_lma(f = f, par = paro, temperature = tg_c, vpd_kpa = vpdo, z = z, co2 = 400)
+	lma <- calc_lma(f = f, par = par*0.0864*0.1, # convert to absorbed mol m-2 day-1 assuming 10% absorbance
+	                temperature = tg_c, vpd_kpa = vpd, z = z, co2 = ca)
 	
 	# calculate gross photosynthesis
 	grossphoto <- vcmax * mc
@@ -115,12 +117,16 @@ calc_optimal_vcmax <- function(tg_c = 25, z = 0, vpdo = 1, cao = 400, paro = 800
 
 	# output
 	results <- as.data.frame(cbind(tg_c, z, vpdo, cao, paro, q0, theta, c, par, patm, ca, vpd, chi, ci, km, 
-	                               gammastar, omega, m, mc, omega_star, vcmax, jvrat, jmax, lma,
+	                               gammastar, omega, m, mc, omega_star, vcmax, jvrat, jmax, 
+	                               vcmax25, jmax25,
+	                               lma,
 	                               grossphoto, resp, netphoto, nrubisco, nbioe, npep, nstructure,
 	                               nall, nphoto, nrubisco_frac, nphoto_frac))
 	
 	colnames(results) <- c('tg_c', 'z', 'vpdo', 'cao', 'paro', 'q0', 'theta', 'c', 'par', 'patm', 'ca', 'vpd', 'chi', 'ci', 'km', 
-	                       'gammastar', 'omega', 'm', 'mc', 'omega_star', 'vcmax', 'jvrat', 'jmax', 'lma',
+	                       'gammastar', 'omega', 'm', 'mc', 'omega_star', 'vcmax', 'jvrat', 'jmax', 
+	                       'vcmax25', 'jmax25',
+	                       'lma',
 	                       'grossphoto', 'resp', 'netphoto', 'nrubisco', 'nbioe', 'npep', 'nstructure',
 	                       'nall', 'nphoto', 'nrubisco_frac', 'nphoto_frac')
 	

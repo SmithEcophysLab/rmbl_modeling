@@ -132,7 +132,8 @@ calc_lma <- function(deciduous = 'yes', # yes or no for deciduous species
   m <- (ci - Gstar)/(ci + 2*Gstar)
   
   # calculate phi0
-  phi0 <- (phi_intercept+0.021*temperature-3.4*10^(-4)*(temperature)^2)/8 
+  # phi0 <- (phi_intercept+0.021*temperature-3.4*10^(-4)*(temperature)^2)/8
+  phi0 = 0.25
   
   # calculate hT
   dS.v<-668.39-1.07*(temperature + 273.15)
