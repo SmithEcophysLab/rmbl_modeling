@@ -137,6 +137,11 @@ env_data_summary_year <- env_data_warm %>% dplyr::group_by(site, elev_m, year) %
                    lma_mean = mean(lma))
 
 ###############
+# print output
+###############
+# write.csv(env_data, 'output/env_data.csv')
+
+###############
 # some analyses
 ###############
 
