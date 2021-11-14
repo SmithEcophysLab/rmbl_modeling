@@ -5,21 +5,23 @@ library(dplyr)
 library(tidyr)
 
 ## read data
-env_data_raw <- read.csv('../data/rmbl_data_climate_merge.csv')
+# env_data_raw <- read.csv('../data/rmbl_data_climate_merge.csv')
+# env_data_raw$vpdmax_kPa <- env_data_raw$vpdmax_hPa/10
+# env_data_raw$vpdmin_kPa <- env_data_raw$vpdmin_hPa/10
 
-env_data_raw$vpdmax_kPa <- env_data_raw$vpdmax_hPa/10
-env_data_raw$vpdmin_kPa <- env_data_raw$vpdmin_hPa/10
+env_data_raw <- read.csv('../data/daymet/daymet_for_optimal_traits.csv')
 
 # create date variable
-env_data_date <- env_data_raw %>% unite(col = "date", "year", "month", sep = ".", remove = FALSE)
-env_data_date$date <- as.numeric(env_data_date$date)
+# env_data_date <- env_data_raw %>% unite(col = "date", "year", "month", sep = ".", remove = FALSE)
+# env_data_date$date <- as.numeric(env_data_date$date)
 
 # add CO2
-co2_ppm <- read.csv('../data/nasa_co2_ppm.csv')
-env_data_co2 <- left_join(env_data_date, co2_ppm, by = "year")
+co2_ppm <- read.csv('../data/co2_mm_mlo.csv', skip = 51)
+head(co2_ppm)
+env_data_co2 <- left_join(env_data_raw, co2_ppm, by = c("year", "month"))
+head(env_data_co2)
 
-# remove years 2016-2019 (no CO2/CRU data)
-env_data <- env_data_co2 %>% dplyr::filter(year < 2012)
+colnames(env_data_co2)[10] <- 'co2_ppm'
 
 ## load model
 source('../models/calc_optimal_vcmax.R')
@@ -52,64 +54,65 @@ plot(t_seq$lma ~ seq(1, 25, 5))
 # anova(lm_vpdmin)
 
 # average months per year above 0 Celsius (f)
-env_data_almont <- env_data %>% dplyr::filter(site == "almont") %>% dplyr::filter(tmean_c > 0) %>% 
-  dplyr::count(year)
-f_almont <- mean(env_data_almont$n)/12
-env_data$f[env_data$site == "almont"] <- f_almont
-
-env_data_cbt <- env_data %>% dplyr::filter(site == "cbt") %>% dplyr::filter(tmean_c > 0) %>% 
-  dplyr::count(year)
-f_cbt <- mean(env_data_cbt$n)/12
-env_data$f[env_data$site == "cbt"] <- f_cbt
-
-env_data_pbm <- env_data %>% dplyr::filter(site == "pbm") %>% dplyr::filter(tmean_c > 0) %>% 
-  dplyr::count(year)
-f_pbm <- mean(env_data_pbm$n)/12
-env_data$f[env_data$site == "pbm"] <- f_pbm
-
-env_data_pfeiler <- env_data %>% dplyr::filter(site == "pfeiler") %>% dplyr::filter(tmean_c > 0) %>% 
-  dplyr::count(year)
-f_pfeiler <- mean(env_data_pfeiler$n)/12
-env_data$f[env_data$site == "pfeiler"] <- f_pfeiler
-
-env_data_road <- env_data %>% dplyr::filter(site == "road") %>% dplyr::filter(tmean_c > 0) %>% 
-  dplyr::count(year)
-f_road <- mean(env_data_road$n)/12
-env_data$f[env_data$site == "road"] <- f_road
-
-## add in CO2 data
-nasa_co2 = read.csv('../data/nasa_co2_ppm.csv')
-env_data_pre = env_data
-env_data = left_join(env_data_pre, nasa_co2, by = 'year')
+# env_data_almont <- env_data %>% dplyr::filter(site == "almont") %>% dplyr::filter(tmean_c > 0) %>% 
+#   dplyr::count(year)
+# f_almont <- mean(env_data_almont$n)/12
+# env_data$f[env_data$site == "almont"] <- f_almont
+# 
+# env_data_cbt <- env_data %>% dplyr::filter(site == "cbt") %>% dplyr::filter(tmean_c > 0) %>% 
+#   dplyr::count(year)
+# f_cbt <- mean(env_data_cbt$n)/12
+# env_data$f[env_data$site == "cbt"] <- f_cbt
+# 
+# env_data_pbm <- env_data %>% dplyr::filter(site == "pbm") %>% dplyr::filter(tmean_c > 0) %>% 
+#   dplyr::count(year)
+# f_pbm <- mean(env_data_pbm$n)/12
+# env_data$f[env_data$site == "pbm"] <- f_pbm
+# 
+# env_data_pfeiler <- env_data %>% dplyr::filter(site == "pfeiler") %>% dplyr::filter(tmean_c > 0) %>% 
+#   dplyr::count(year)
+# f_pfeiler <- mean(env_data_pfeiler$n)/12
+# env_data$f[env_data$site == "pfeiler"] <- f_pfeiler
+# 
+# env_data_road <- env_data %>% dplyr::filter(site == "road") %>% dplyr::filter(tmean_c > 0) %>% 
+#   dplyr::count(year)
+# f_road <- mean(env_data_road$n)/12
+# env_data$f[env_data$site == "road"] <- f_road
+# 
+# ## add in CO2 data
+# nasa_co2 = read.csv('../data/nasa_co2_ppm.csv')
+# env_data_pre = env_data
+# env_data = left_join(env_data_pre, nasa_co2, by = 'year')
 
 ## run model
-model_output <- calc_optimal_vcmax(tg_c = env_data$tmean_c, 
-                                   z = env_data$elev, 
-                                   vpdo = env_data$cru_vpd,
-                                   paro = env_data$cru_par,
-                                   f = env_data$f,
-                                   cao = env_data$co2_ppm.x)
+colnames(env_data_co2)
+model_output <- calc_optimal_vcmax(tg_c = env_data_co2$tave, 
+                                   z = env_data_co2$elevation, 
+                                   vpdo = env_data_co2$vpd,
+                                   paro = env_data_co2$par,
+                                   f = env_data_co2$seasonLength,
+                                   cao = env_data_co2$co2_ppm)
 
 # add model output to dataset
-env_data$vcmax <- model_output$vcmax
-env_data$jmax <- model_output$jmax
-env_data$vcmax25 <- model_output$vcmax25
-env_data$jmax25 <- model_output$jmax25
-env_data$lma <- model_output$lma
-env_data$nphoto <- model_output$nphoto
-env_data$nstructure <- model_output$nstructure
-env_data$nall <- model_output$nall
+env_data_co2$vcmax <- model_output$vcmax
+env_data_co2$jmax <- model_output$jmax
+env_data_co2$vcmax25 <- model_output$vcmax25
+env_data_co2$jmax25 <- model_output$jmax25
+env_data_co2$lma <- model_output$lma
+env_data_co2$nphoto <- model_output$nphoto
+env_data_co2$nstructure <- model_output$nstructure
+env_data_co2$nall <- model_output$nall
 
 # remove months where tmean is at or below freezing
-env_data_warm <- env_data %>% dplyr::filter(tmean_c > 0)
+env_data_warm <- env_data_co2 %>% dplyr::filter(tave > 0)
 
 # create site & year summary table
-env_data_summary <- env_data_warm %>% dplyr::group_by(site, elev_m) %>% 
-  dplyr::summarize(tmean_c_mean = mean(tmean_c),
-                   cru_vpd_mean = mean(cru_vpd),
-                   cru_par_mean = mean(cru_par),
-                   co2_mean = mean(co2_ppm.x),
-                   f_mean = mean(f),
+env_data_summary <- env_data_warm %>% dplyr::group_by(site, elevation) %>% 
+  dplyr::summarize(tave_mean = mean(tave),
+                   vpd_mean = mean(vpd),
+                   par_mean = mean(par),
+                   co2_mean = mean(co2_ppm),
+                   seasonLength_mean = mean(seasonLength),
                    vcmax25_mean = mean(vcmax25),
                    jmax25_mean = mean(jmax25),
                    vcmax_mean = mean(vcmax),
@@ -119,14 +122,14 @@ env_data_summary <- env_data_warm %>% dplyr::group_by(site, elev_m) %>%
                    nphoto_mean = mean(nphoto),
                    lma_mean = mean(lma))
 
-arrange(env_data_summary, elev_m)
+arrange(env_data_summary, elevation)
 
-env_data_summary_year <- env_data_warm %>% dplyr::group_by(site, elev_m, year) %>% 
-  dplyr::summarize(tmean_c_mean = mean(tmean_c),
-                   cru_vpd_mean = mean(cru_vpd),
-                   cru_par_mean = mean(cru_par),
-                   co2_mean = mean(co2_ppm.x),
-                   f_mean = mean(f),
+env_data_summary_year <- env_data_warm %>% dplyr::group_by(site, elevation, year) %>% 
+  dplyr::summarize(tave_mean = mean(tave),
+                   vpd_mean = mean(vpd),
+                   par_mean = mean(par),
+                   co2_mean = mean(co2_ppm),
+                   seasonLength_mean = mean(seasonLength),
                    vcmax25_mean = mean(vcmax25),
                    jmax25_mean = mean(jmax25),
                    vcmax_mean = mean(vcmax),
@@ -139,7 +142,7 @@ env_data_summary_year <- env_data_warm %>% dplyr::group_by(site, elev_m, year) %
 ###############
 # print output
 ###############
-# write.csv(env_data, 'output/env_data.csv')
+# write.csv(env_data_co2[, -c(11:14)], 'output/rmbl_optimality_output.csv', row.names = F)
 
 ###############
 # some analyses

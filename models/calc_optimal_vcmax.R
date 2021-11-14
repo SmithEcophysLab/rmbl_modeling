@@ -49,8 +49,8 @@ calc_optimal_vcmax <- function(tg_c = 25, z = 0, vpdo = 1, cao = 400, paro = 800
 
 	# environmental terms
 	patm <- calc_patm(z)
-	par <- calc_par(paro, z)
-	vpd <- calc_vpd(tg_c, z, vpdo)
+	par <- paro ## not using calc function based on elevation
+	vpd <- vpdo ## not using calc function based on elevation
 	ca <- cao * 1e-6 * patm
 
 	# K and Gamma* model terms
