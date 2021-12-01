@@ -164,3 +164,27 @@ ggplot(env_data_summary_year, aes(x = year, y = nall_mean)) +
   geom_line(aes(color = site))
 ggplot(env_data_summary_year, aes(x = year, y = lma_mean)) + 
   geom_line(aes(color = site))
+
+nper_site_plot <- ggplot(data = env_data_summary, 
+                         aes(x = elevation, y = (nall_mean * 1/lma_mean) * 100)) +
+  theme(#legend.position = c(1, 1),
+        #legend.justification = c(1, 1),
+        #legend.title = element_text(size = 28),
+        #legend.text = element_text(size = 20),
+        #legend.background = element_rect(fill = 'white', colour = 'black'),
+        plot.title = element_text(size = 30, colour = 'black', hjust = 0.5),
+        axis.title.y = element_text(size = 30, colour = 'black'),
+        axis.title.x = element_text(size = 30, colour = 'black'),
+        axis.text.x = element_text(size = 20, colour = 'black'),
+        axis.text.y = element_text(size = 20, colour = 'black'),
+        panel.background = element_rect(fill = 'white', colour = 'black'),
+        panel.grid.major = element_line(colour = "grey")) +
+  geom_point() +
+  geom_smooth(method = 'lm', fullrange = F, colour = 'black') +
+  ylab('Predicted Leaf N (%)') +
+  xlab('Elevation (m)') +
+  ylim(c(0.8, 1.6)) +
+  xlim(c(2400, 3600))
+
+ggsave("plots/n_percentage_plot.jpeg", plot = nper_site_plot, 
+       width = 25, height = 25, units = "cm")
