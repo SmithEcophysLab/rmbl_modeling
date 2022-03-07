@@ -1,0 +1,219 @@
+This data package been produced by and downloaded from the National Ecological Observatory Network (NEON). NEON is funded by the National Science Foundation (Awards 0653461, 0752017, 1029808, 1138160, 1246537, 1638695, 1638696, 1724433) and managed cooperatively by Battelle. These data are provided under the terms of the NEON data policy at https://www.neonscience.org/data-policy.
+
+
+
+DATA PRODUCT INFORMATION
+
+------------------------
+
+
+
+ID: NEON.DOM.SITE.DP1.10058.001
+
+
+
+Name: Plant presence and percent cover
+
+
+
+Description: Plant species cover-abundance and presence observed in multi-scale plots. Plant species and associated percent cover in 1m2 subplots and plant species presence in 10m2 and 100m2 subplots are reported from 400m2 plots. Archived plant vouchers and foliar tissue support the data and additional analyses.
+
+
+
+NEON Science Team Supplier: Terrestrial Observation System
+
+
+
+Abstract: This data product contains the quality-controlled, native sampling resolution data from NEON's plant diversity sampling. The presence and percent cover of species is documented in square, multi-scale plots. The presence and percent cover of plant species and ground cover is observed in six 1m2 subplots per plot. The presence of species is observed in six 10m2 subplots and four 100m2 subplots per plot, which can be combined for a list of species at the 400m2 plot scale. For additional details, see the data product user guide, protocol, and science design listed in the Documentation section in this data product's details webpage.
+
+Latency: The expected time from data and/or sample collection in the field to data publication is as follows, for each of the data tables (in days) in the downloaded data package. See the Data Product User Guide for more information.
+
+div_10m2Data100m2Data:  135
+
+div_1m2Data:  135
+
+div_geneticarchive:  120
+
+div_voucher:  215
+
+
+
+Brief Design Description: Up to thirty Distributed Plots and three Tower Plots are measured at each site. Plots are sampled annually at most sites to correspond with peak greenness, and twice a year at select sites with bimodal peaks in greenness and species composition. The multi-scale plot design is consistent with methods of the Carolina Vegetation Project. The files provided with this data product also include records of plant vouchers and foliar tissue for analyses by the ecological community that are stored at external archives, and a table to facilitate the resolution of species not identified when encountered in the field during observation and data entry.
+
+
+
+Brief Study Area Description: These data are collected at NEON terrestrial sites.
+
+
+
+Sensor(s): 
+
+
+
+Keywords: plant percent cover, plants, community composition, species composition, plant presence, population, diversity, material samples, vegetation, archived samples, cover, taxonomy
+
+
+
+
+
+QUERY INFORMATION
+
+-----------------
+
+
+
+Date-Time for Data Publication: 2021-12-21 23:41 (UTC)
+
+Start Date-Time for Queried Data: 2019-06-05 17:00 (UTC)
+
+End Date-Time for Queried Data: 2019-06-27 17:00 (UTC)
+
+
+
+Site: CLBJ
+
+Geographic coordinates (lat/long datum): 
+Domain: D11
+
+
+
+
+
+DATA PACKAGE CONTENTS
+
+---------------------
+
+
+
+This folder contains the following documentation files:
+
+
+
+- This readme file: NEON.D11.CLBJ.DP1.10058.001.readme.20220120T173946Z.txt
+
+- Term descriptions, data types, and units: NEON.D11.CLBJ.DP1.10058.001.variables.20211221T234114Z.csv
+
+- Data entry validation and parsing rules: NEON.D11.CLBJ.DP1.10058.001.validation.20211221T234114Z.csv
+
+- Machine-readable metadata file describing the data package: NEON.D11.CLBJ.DP1.10058.001.EML.20190605-20190627.20220120T173946Z.xml. This file uses the Ecological Metadata Language schema. Learn more about this specification and tools to parse it at https://www.neonscience.org/about/faq.
+
+- Other related documents, such as engineering specifications, field protocols and data processing documentation, are available. Please visit https://data.neonscience.org/data-products/DP1.10058.001 for more information.
+
+
+
+
+
+This folder also contains 1 data files:
+
+NEON.D11.CLBJ.DP1.10058.001.div_1m2Data.2019-06.basic.20211221T234114Z.csv - Plant species identifications and cover, and cover of abiotic variables within 1 square meter subplots
+
+
+
+Basic download package definition: The basic download package contains the primary measurements.
+
+
+
+Expanded download package definition: The expanded data package includes data related to voucher samples and genetic samples stored in archive facilities.
+
+
+
+
+
+FILE NAMING CONVENTIONS
+-----------------------
+
+NEON data files are named using a series of component abbreviations separated by periods. File naming conventions for NEON data files differ between NEON science teams. A file will have the same name whether it is accessed via NEON's data portal or API. Please visit https://www.neonscience.org/data-formats-conventions for a full description of the naming conventions.
+
+ISSUE LOG
+
+----------
+
+
+
+This log provides a list of issues that were identified during data collection or processing, prior to publication of this data package. For a more recent log, please visit this data product's detail page at https://data.neonscience.org/data-products/DP1.10058.001.
+
+
+
+Issue Date: 2021-01-06
+Issue: Safety measures to protect personnel during the COVID-19 pandemic resulted in reduced or eliminated sampling activities for extended periods at NEON sites. Data availability may be reduced during this time.
+       Date Range: 2020-03-23 to 2021-06-01
+       Location(s) Affected: All
+Resolution Date: 
+Resolution: 
+
+Issue Date: 2021-12-09
+Issue: Prior to the 2022 data release, publication of species identifications were obfuscated to a higher taxonomic rank when the taxon was found to be listed as threatened, endangered, or sensitive at the state level where the observation was recorded. Obfuscating state-listed taxa has created challenges for data users studying biodiversity.
+       Date Range: 2012-01-01 to 2021-12-31
+       Location(s) Affected: All
+Resolution Date: 2021-12-31
+Resolution: The state-level obfuscation routine was removed from the data publication process at all locations excluding sites located in D01 and D20. Data have been reprocessed to remove the obfuscation of state-listed taxa. Federally listed threatened and endangered or sensitive species remain obfuscated at all sites and sensitive species remain redacted at National Park sites.
+
+Issue Date: 2020-02-01
+Issue: Prior to 2020, there was no mechanism to communicate that fewer than the targeted number of subplots and plots were sampled.  Incomplete sampling, results in reduced sampling effort and additional records should not be expected.
+       Date Range: 2012-01-01 to 2020-10-16
+       Location(s) Affected: All terrestrial sites
+Resolution Date: 2020-10-16
+Resolution: In 2020, NEON added the quality flag "samplingImpractical" to the div_1m2Data and  div_10m2Data100m2Data tables of this data product to assist users in understanding when data for this product are temporarily missing versus permanently unavailable. Beginning in 2020, there will *always* be one record generated per subplot in each plot scheduled for sampling in the div_1m2Data and div_10m2Data100m2Data tables." For example, if field sampling was not possible **samplingImpractical** is populated with a value other than 'OK' (e.g., 'location flooded') and no plant species data are recorded in the associated subplot.
+
+Issue Date: 2020-02-01
+Issue: Prior to 2020, there was no mechanism to communicate to data users instances of data collection when conditions were suboptimal for the identification of plant species.
+       Date Range: 2012-01-01 to 2020-02-01
+       Location(s) Affected: All terrestrial sites
+Resolution Date: 2020-02-01
+Resolution: In 2020, NEON added the quality flag "biophysicalCritera" to the div_1m2Data and  div_10m2Data100m2Data tables to assist users in understanding when data for this product was collected when conditions were not optimal. If conditions were suboptimal - the majority of species present do not possess plant parts conducive to identification - the field **biophysicalCriteria** is populated with a value other than "OK - no known exceptions" (e.g., conditions not met: most plants not yet flowering) but plant species and ancillary data are recorded.
+
+Issue Date: 2019-02-01
+Issue: Consultation with the external Technical Working Group guided statistical analyses that resulted in data-driven sampling reductions.
+       Date Range: 2019-02-01 to 2019-02-01
+       Location(s) Affected: All terrestrial sites
+Resolution Date: 2019-02-01
+Resolution: Prior to the 2019 field sampling season, the full plot - the 1m2 subplots and the 10 and 100m2 subplots - was observed at every plot targeted for sampling at each bout and each site. For 2019 and subsequent sampling years, the 10 and 100m2 subplots at every plot are sampled every other year at each site.
+
+Issue Date: 2019-02-01
+Issue: Consultation with the external Technical Working Group guided statistical analyses that resulted in data-driven sampling reductions. (Part 2)
+       Date Range: 2019-02-01 to 2019-02-01
+       Location(s) Affected: All terrestrial sites
+Resolution Date: 2019-02-01
+Resolution: Prior to 2019 field sampling season, two additional 1 and 10m2 subplots were sampled at each plot. The presence and percent cover of species and ancillary data was observed in eight 1m2 subplots. The presence of species was observed in eight 10m2 subplots and the four 100m2 subplots. For the 2019 and subsequent sampling years, the presence and percent cover of species and ancillary data is observed in six 1m2 subplots. The presence of species is observed in six 10m2 subplots and the four 100m2 subplots.
+
+Issue Date: 2018-02-01
+Issue: Financial and logistical constraints caused a reduction in sampling capacity.
+       Date Range: 2018-02-01 to 2018-12-31
+       Location(s) Affected: All terrestrial sites
+Resolution Date: 2018-12-31
+Resolution: At each site and for each bout, the number of plots at which the 10 and 100m2 subplots were measured was reduced. The complete plot – including the 10, and 100m2 subplots reported in the div_10m2Data100m2Data as well as the 1m2 subplots reported in the 1m2Data table – was observed at half of the plots and only 1m2 subplots were observed at the other half of the plots.
+
+
+
+
+
+ADDITIONAL INFORMATION
+
+----------------------
+
+
+
+Protection of species of concern: At most sites, taxonomic IDs of species of concern have been 'fuzzed', i.e., reported at a higher taxonomic rank than the raw data, to avoid publishing locations of sensitive species. For a few sites with stricter regulations (e.g., Great Smoky Mountains National Park (GRSM)), records for species of concern are not published. 
+
+
+
+Queries for this data will return data from all dates for div_voucher_pub (which may have been collected many years before a plant presence and absence or genetic material collection event), whereas `div_1m2Data_pub`, `div_10m2Data100m2Data_pub`, and `div_geneticarchive_pub` files will be subset to the data collected during the date range specified. The protocol dictates that each target plot is sampled once or twice annually (>1 expected record per subplotID per plotID per year in `div_1m2Data_pub` and `div_10m2Data100m2Data_pub`). A record in `div_1m2Data_pub` or `div_10m2Data100m2Data_pub` may have zero (if genetic material or vouchers not collected from that plot) or more corresponding plotID records in `div_geneticarchive_pub` and `div_voucher_pub` depending on date range of the data downloaded, and records in `div_geneticarchive_pub` `div_voucher_pub` may have zero (if genetic material or voucher not collected in a plot) or one corresponding record in `div_geneticarchive_pub` and/or `div_voucher_pub`. The protocol dictates observations of species presence in nested plots. A record (species present) from div_1m2Data_pub is – based on the protocol – also present in corresponding subplots in `div_10m2Data100m2Data_pub` but the records are not always populated in `div_10m2Data100m2Data_pub` (a species in subplot 31.1.1 from file `div_1m2Data_pub` is also in 31.1.10 and 31 from file `div_10m2Data100m2Data_pub` but is not provided in the data). Records where plotID is equivalent in `div_1m2Data_pub` and `div_10m2Data100m2Data_pub` reflect total species presence at the 400m2 plot scale. Duplicates may exist where protocol and/or data entry aberrations have occurred; users should check data carefully for anomalies before joining tables. Taxonomic IDs of species of concern have been 'fuzzed'; see data package readme files for more information.
+
+
+
+NEON DATA POLICY AND CITATION GUIDELINES
+
+----------------------------------------
+
+
+
+A citation statement is available in this data product's detail page at https://data.neonscience.org/data-products/DP1.10058.001. Please visit https://www.neonscience.org/data-policy for more information about NEON's data policy and citation guidelines.
+
+
+
+DATA QUALITY AND VERSIONING
+---------------------------
+
+NEON data are initially published with a status of Provisional, in which updates to data and/or processing algorithms will occur on an as-needed basis, and query reproducibility cannot be guaranteed. Once data are published as part of a Data Release, they are no longer provisional, and are associated with a stable DOI.
+
+To learn more about provisional versus released data, please visit https://www.neonscience.org/data-revisions-releases.

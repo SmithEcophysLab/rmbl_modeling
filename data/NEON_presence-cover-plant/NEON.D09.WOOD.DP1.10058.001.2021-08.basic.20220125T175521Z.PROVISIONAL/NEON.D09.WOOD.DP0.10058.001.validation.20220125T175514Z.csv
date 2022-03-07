@@ -1,0 +1,150 @@
+table,fieldName,description,dataType,units,parserToCreate,entryValidationRulesParser,entryValidationRulesForm
+div_1m2Data,uid,"Unique ID within NEON database; an identifier for the record",string,NA,"[CREATE_UID]",,
+div_1m2Data,plotID,"Plot identifier (NEON site code_XXX)",string,NA,,"[NAMED_LOCATION_TYPE('OS Plot - div' )]","[FROM_TABLE(TOS_SPATIAL)][REQUIRE]"
+div_1m2Data,subplotID,"Identifier for the NEON subplot",string,NA,,"[LOV][REQUIRE]","[LOV][REQUIRE]"
+div_1m2Data,eventID,"An identifier for the set of information associated with the event, which includes information about the place and time of the event",string,NA,,"[ASCII]",
+div_1m2Data,startDate,"The start date-time or interval during which an event occurred",dateTime,NA,"[CONVERT_TO_UTC(namedLocation)]",,"[DATE_FORMAT('YYYY-MM-DD')][REQUIRE]"
+div_1m2Data,endDate,"The end date-time or interval during which an event occurred",dateTime,NA,"[CONVERT_TO_UTC(namedLocation)]",,"[DATE_FORMAT('YYYY-MM-DD')][DEFAULT_TO(startDate)][HIDDEN]"
+div_1m2Data,boutNumber,"Number of the sampling bout within a calendar year, beginning with 1",unsigned integer,number,,"[GREATER_THAN(0)][LESS_THAN(4)]","[GREATER_THAN(0)][LESS_THAN(4)]"
+div_1m2Data,samplingProtocolVersion,"The NEON document number and version where detailed information regarding the sampling method used is available; format NEON.DOC.######vX",string,NA,,"[LOV]","[LOV]"
+div_1m2Data,samplingImpractical,"Samples and/or measurements were not collected due to the indicated circumstance",string,NA,,"[IF(endDate > 2020-06-01T00:00), REQUIRE][LOV]","[LOV][REQUIRE]"
+div_1m2Data,samplingImpracticalRemarks,"Technician notes; free text comments accompanying the sampling impractical record",string,NA,,"[ASCII]","[ASCII]"
+div_1m2Data,biophysicalCriteria,"An indicator of whether sampling coincided with the intended biophysical conditions",string,NA,,"[LOV]","[LOV][IF(samplingImpractical=!'OK'), REQUIRE_NULL]"
+div_1m2Data,divDataType,"Identifier for the type of data recorded: plantSpecies or otherVariables",string,NA,,"[LOV][IF(samplingImpractical='OK'), REQUIRE][IF(IS_BLANK(samplingImpractical)), REQUIRE]","[LOV][IF(samplingImpractical='OK'), REQUIRE][IF(samplingImpractical!='OK' ), REQUIRE_NULL][IF(targetTaxaPresent = 'Y' & otherVariablesPresent = 'N'), 'plantSpecies'][IF(targetTaxaPresent = 'N' & otherVariablesPresent = 'Y'), 'otherVariables']"
+div_1m2Data,targetTaxaPresent,"Indicator of whether the sample contained individuals of the target taxa",string,NA,,"[LOV][IF(endDate > 2017-12-31T00:00 AND endDate < 2020-06-01T00:00), REQUIRE][IF(samplingImpractical='OK' AND endDate > 2020-06-01T00:00), REQUIRE]","[LOV][IF(samplingImpractical='OK'), REQUIRE][IF(samplingImpractical!='OK' ), REQUIRE_NULL]"
+div_1m2Data,otherVariablesPresent,"Indicator of whether the sample contained other variables, such as abiotic, biotic, and non-vascular plant cover",string,NA,,"[LOV][IF(endDate > 2017-12-31T00:00 AND endDate < 2020-06-01T00:00), REQUIRE][IF(samplingImpractical='OK' AND endDate > 2020-06-01T00:00), REQUIRE]","[LOV][IF(samplingImpractical='OK'), REQUIRE][IF(samplingImpractical!='OK' ), REQUIRE_NULL]"
+div_1m2Data,taxonID,"Species code, based on one or more sources",string,NA,,"[IF(divDataType='plantSpecies'), REQUIRE][IF(divDataType='otherVariables'), REQUIRE_NULL][IF(divDataType='plantSpecies'), ELEMENT_OF('PLANT','taxonID','T')][IF(targetTaxaPresent='N'), REQUIRE_NULL]","[IF(samplingImpractical='OK'), REQUIRE][IF(samplingImpractical!='OK' ), REQUIRE_NULL][IF(divDataType='plantSpecies'), REQUIRE][IF(divDataType='otherVariables'), REQUIRE_NULL][IF(divDataType='plantSpecies'), ELEMENT_OF('PLANT','taxonID','T')][IF(targetTaxaPresent='N'), REQUIRE_NULL]"
+div_1m2Data,acceptedTaxonID,"Accepted species code, based on one or more sources",string,NA,,"[ASCII]","[HIDDEN]"
+div_1m2Data,identificationQualifier,"A standard term to express the determiner's doubts about the Identification",string,NA,,"[LOV][IF(divDataType='otherVariables'), REQUIRE_NULL]","[LOV][IF(divDataType='otherVariables'), REQUIRE_NULL][IF(samplingImpractical!='OK'), REQUIRE_NULL]"
+div_1m2Data,taxonIDRemarks,"Technician notes about the specific taxon; free text comments accompanying the record",string,NA,,"[ASCII][IF(IS_BLANK(taxonID)), REQUIRE_NULL]","[ASCII][IF(IS_BLANK(taxonID)), REQUIRE_NULL][IF(samplingImpractical!='OK'), REQUIRE_NULL]"
+div_1m2Data,morphospeciesID,"Identifier for morphospecies",string,NA,,"[ASCII][IF(divDataType='otherVariables'), REQUIRE_NULL]","[ASCII][FROM_TABLE(TOS_MORPHOSPECIES)][IF(divDataType='otherVariables'), REQUIRE_NULL][IF(samplingImpractical!='OK'), REQUIRE_NULL]"
+div_1m2Data,morphospeciesIDRemarks,"Technician notes about the morphospecies; free text comments accompanying the record",string,NA,,"[ASCII]","[ASCII]"
+div_1m2Data,identificationReferences,"A list of sources (concatenated and semicolon separated) used to derive the specific taxon concept; including field guide editions, books, or versions of NEON keys used",string,NA,,"[LOV]","[LOV]"
+div_1m2Data,otherVariables,"Descriptor of other variables present in the sample, including abiotic, biotic, and non-vascular plant cover",string,NA,,"[LOV]","[IF(divDataType='otherVariables'), REQUIRE][IF(divDataType='plantSpecies'), REQUIRE_NULL][IF(samplingImpractical!='OK'), REQUIRE_NULL]"
+div_1m2Data,percentCover,"Ocular estimate of cover of the index (e.g., species) as a percent",real,percent,,"[GREATER_THAN_OR_EQUAL_TO(0.5)][LESS_THAN_OR_EQUAL_TO(100)]","[IF(otherVariablesPresent='Y' OR targetTaxaPresent='Y'), WARN][GREATER_THAN_OR_EQUAL_TO(0.5)][LESS_THAN_OR_EQUAL_TO(100)]"
+div_1m2Data,heightPlantOver300cm,"Indicator of whether individuals of the species in the sample are taller than 300 cm",string,NA,,"[LOV]",
+div_1m2Data,heightPlantSpecies,"Ocular estimate of the height of the plant species",unsigned integer,centimeter,,,"[HIDDEN]"
+div_1m2Data,remarks,"Technician notes; free text comments accompanying the record",string,NA,,"[ASCII]","[ASCII]"
+div_1m2Data,measuredBy,"An identifier for the technician who measured or collected the data",string,NA,,"[ASCII]","[FROM_TABLE(PERSONNEL)]"
+div_1m2Data,recordedBy,"An identifier for the technician who recorded the data",string,NA,,"[ASCII]","[FROM_TABLE(PERSONNEL)]"
+div_1m2Data,enteredBy,"An identifier for the technician who entered the data",string,NA,,"[ASCII]","[FROM_TABLE(PERSONNEL)]"
+div_1m2Data,fulcrumVersion,"Version of the Fulcrum application used during data entry",string,NA,,"[ASCII]",
+div_1m2Data,platformInfo,"Operating System and browser information (where applicable) of computer used during data entry",string,NA,,"[ASCII]",
+div_1m2Data,dataQF,"Data quality flag",string,NA,,"[ASCII]",
+div_1m2Data,fulcrumPrimaryKey,"Primary identifier for the record in Fulcrum at the same granularity for which the record occurs in the NEON database (i.e., one fulcrumPrimaryKey should map to a single record in the NEON database)",string,NA,,"[ASCII]",
+div_10m2Data100m2Data,uid,"Unique ID within NEON database; an identifier for the record",string,NA,"[CREATE_UID]",,
+div_10m2Data100m2Data,plotID,"Plot identifier (NEON site code_XXX)",string,NA,,"[NAMED_LOCATION_TYPE('OS Plot - div')]","[FROM_TABLE(TOS_SPATIAL)][REQUIRE]"
+div_10m2Data100m2Data,subplotID,"Identifier for the NEON subplot",string,NA,,"[LOV][REQUIRE]","[LOV][REQUIRE]"
+div_10m2Data100m2Data,eventID,"An identifier for the set of information associated with the event, which includes information about the place and time of the event",string,NA,,"[ASCII]",
+div_10m2Data100m2Data,startDate,"The start date-time or interval during which an event occurred",dateTime,NA,"[CONVERT_TO_UTC(namedLocation)]",,"[DATE_FORMAT('YYYY-MM-DD')]"
+div_10m2Data100m2Data,endDate,"The end date-time or interval during which an event occurred",dateTime,NA,"[CONVERT_TO_UTC(namedLocation)]",,"[DATE_FORMAT('YYYY-MM-DD')][DEFAULT_TO(startDate)][HIDDEN]"
+div_10m2Data100m2Data,boutNumber,"Number of the sampling bout within a calendar year, beginning with 1",unsigned integer,number,,"[GREATER_THAN(0)][LESS_THAN(4)]","[GREATER_THAN(0)][LESS_THAN(4)]"
+div_10m2Data100m2Data,samplingProtocolVersion,"The NEON document number and version where detailed information regarding the sampling method used is available; format NEON.DOC.######vX",string,NA,,"[LOV]","[LOV]"
+div_10m2Data100m2Data,samplingImpractical,"Samples and/or measurements were not collected due to the indicated circumstance",string,NA,,"[IF(endDate > 2020-06-01T00:00), REQUIRE][LOV]","[LOV]"
+div_10m2Data100m2Data,samplingImpracticalRemarks,"Technician notes; free text comments accompanying the sampling impractical record",string,NA,,"[ASCII]","[ASCII]"
+div_10m2Data100m2Data,biophysicalCriteria,"An indicator of whether sampling coincided with the intended biophysical conditions",string,NA,,"[LOV]","[IF(endDate > 2020-06-01T00:00 AND samplingImpractical='OK'), REQUIRE][LOV]"
+div_10m2Data100m2Data,targetTaxaPresent,"Indicator of whether the sample contained individuals of the target taxa",string,NA,,"[LOV][IF(endDate > 2017-12-31T00:00 AND endDate < 2020-06-01T00:00), REQUIRE][IF(samplingImpractical='OK' AND endDate > 2020-06-01T00:00), REQUIRE]","[LOV][IF(samplingImpractical='OK'), REQUIRE][IF(samplingImpractical!='OK'), REQUIRE_NULL]"
+div_10m2Data100m2Data,taxonID,"Species code, based on one or more sources",string,NA,,"[IF(additionalSpecies='N'), REQUIRE_NULL][IF(additionalSpecies='Y'), ELEMENT_OF('PLANT','taxonID','T')]","[IF(samplingImpractical='OK'), REQUIRE][IF(samplingImpractical!='OK'), REQUIRE_NULL][IF(targetTaxaPresent='Y'), REQUIRE][IF(targetTaxaPresent='N'), REQUIRE_NULL][IF(targetTaxaPresent='Y'), ELEMENT_OF('PLANT','taxonID','T')]"
+div_10m2Data100m2Data,acceptedTaxonID,"Accepted species code, based on one or more sources",string,NA,,"[ASCII]","[HIDDEN]"
+div_10m2Data100m2Data,identificationQualifier,"A standard term to express the determiner's doubts about the Identification",string,NA,,"[LOV]","[IF(targetTaxaPresent='N'), REQUIRE_NULL][LOV][IF(samplingImpractical!='OK'), REQUIRE_NULL]"
+div_10m2Data100m2Data,taxonIDRemarks,"Technician notes about the specific taxon; free text comments accompanying the record",string,NA,,"[ASCII][IF(IS_BLANK(taxonID)), REQUIRE_NULL]","[ASCII][IF(IS_BLANK(taxonID)), REQUIRE_NULL][IF(samplingImpractical!='OK'), REQUIRE_NULL]"
+div_10m2Data100m2Data,morphospeciesID,"Identifier for morphospecies",string,NA,,"[ASCII]","[ASCII][FROM_TABLE(TOS_MORPHOSPECIES)][IF(samplingImpractical!='OK'), REQUIRE_NULL]"
+div_10m2Data100m2Data,morphospeciesIDRemarks,"Technician notes about the morphospecies; free text comments accompanying the record",string,NA,,"[ASCII]","[ASCII]"
+div_10m2Data100m2Data,identificationReferences,"A list of sources (concatenated and semicolon separated) used to derive the specific taxon concept; including field guide editions, books, or versions of NEON keys used",string,NA,,"[LOV]","[LOV]"
+div_10m2Data100m2Data,additionalSpecies,"Indicator of whether additional species are detected on the larger subplot relative to the smaller subplot",string,NA,,"[LOV][IF(endDate > 2017-12-31T00:00 AND endDate < 2020-06-01T00:00), REQUIRE][IF(samplingImpractical='OK' AND endDate > 2020-06-01T00:00), REQUIRE]","[LOV][IF(samplingImpractical='OK'), REQUIRE][IF(samplingImpractical!='OK' ), REQUIRE_NULL]"
+div_10m2Data100m2Data,remarks,"Technician notes; free text comments accompanying the record",string,NA,,"[ASCII]","[IF (additionalSpecies = 'N' AND endDate > 2020-06-01T00:00), REQUIRE][ASCII]"
+div_10m2Data100m2Data,measuredBy,"An identifier for the technician who measured or collected the data",string,NA,,"[ASCII]","[FROM_TABLE(PERSONNEL)]"
+div_10m2Data100m2Data,recordedBy,"An identifier for the technician who recorded the data",string,NA,,"[ASCII]","[FROM_TABLE(PERSONNEL)]"
+div_10m2Data100m2Data,enteredBy,"An identifier for the technician who entered the data",string,NA,,"[ASCII]","[FROM_TABLE(PERSONNEL)]"
+div_10m2Data100m2Data,fulcrumVersion,"Version of the Fulcrum application used during data entry",string,NA,,"[ASCII]",
+div_10m2Data100m2Data,platformInfo,"Operating System and browser information (where applicable) of computer used during data entry",string,NA,,"[ASCII]",
+div_10m2Data100m2Data,dataQF,"Data quality flag",string,NA,,"[ASCII]",
+div_10m2Data100m2Data,fulcrumPrimaryKey,"Primary identifier for the record in Fulcrum at the same granularity for which the record occurs in the NEON database (i.e., one fulcrumPrimaryKey should map to a single record in the NEON database)",string,NA,,"[ASCII]",
+div_morphospecies,uid,"Unique ID within NEON database; an identifier for the record",string,NA,"[CREATE_UID]",,
+div_morphospecies,siteID,"NEON site code",string,NA,,"[REQUIRE][NAMED_LOCATION_TYPE('OS Plot - div' OR 'SITE')]","[REQUIRE][NAMED_LOCATION_TYPE('SITE')]"
+div_morphospecies,morphospeciesCreatedDate,"Date and time of morphospecies record creation",dateTime,NA,"[CONVERT_TO_UTC(namedLocation)]",,"[REQUIRE][DATE_FORMAT(YYYY-MM-DD)][SUGGESTED_ENTRY (previousValue)][LESS_THAN_OR_EQUAL_TO (now + 24)]"
+div_morphospecies,morphospeciesResolvedDate,"Date and time of resolving the morphospecies identification",dateTime,NA,"[CONVERT_TO_UTC(namedLocation)]",,"[REQUIRE][DATE_FORMAT(YYYY-MM-DD)][SUGGESTED_ENTRY (previousValue)][LESS_THAN_OR_EQUAL_TO (now + 24)]"
+div_morphospecies,morphospeciesID,"Identifier for morphospecies",string,NA,,"[ASCII]","[ASCII][DOMAIN + '.' + YEAR + '.' morphospecies]"
+div_morphospecies,morphospeciesIDRemarks,"Technician notes about the morphospecies; free text comments accompanying the record",string,NA,,"[ASCII]","[ASCII]"
+div_morphospecies,taxonID,"Species code, based on one or more sources",string,NA,,"[ELEMENT_OF('PLANT', 'taxonID', 'T')]","[ELEMENT_OF('PLANT','taxonID','T')]"
+div_morphospecies,identificationQualifier,"A standard term to express the determiner's doubts about the Identification",string,NA,,"[LOV]","[LOV]"
+div_morphospecies,identificationReferences,"A list of sources (concatenated and semicolon separated) used to derive the specific taxon concept; including field guide editions, books, or versions of NEON keys used",string,NA,,"[LOV]","[LOV]"
+div_morphospecies,morphospeciesResolved,"Indicator of whether the morphospecies has been identified",string,NA,,"[LOV]","[LOV]"
+div_morphospecies,measuredBy,"An identifier for the technician who measured or collected the data",string,NA,,"[ASCII]",
+div_morphospecies,recordedBy,"An identifier for the technician who recorded the data",string,NA,,"[ASCII]","[FROM_PERSONNEL][SUGGESTED_ENTRY (previousValue)]"
+div_morphospecies,identifiedBy,"An identifier for the technician who identified the specimen",string,NA,,"[ASCII]","[FROM_PERSONNEL][SUGGESTED_ENTRY (previousValue)]"
+div_morphospecies,fulcrumVersion,"Version of the Fulcrum application used during data entry",string,NA,,"[ASCII]",
+div_morphospecies,platformInfo,"Operating System and browser information (where applicable) of computer used during data entry",string,NA,,"[ASCII]",
+div_morphospecies,dataQF,"Data quality flag",string,NA,,"[ASCII]",
+div_voucher,uid,"Unique ID within NEON database; an identifier for the record",string,NA,"[CREATE_UID]",,"[HIDDEN]"
+div_voucher,locationID,"Identifier for location where sample was collected",string,NA,,"[REQUIRE][NAMED_LOCATION_TYPE('OS Plot - div' OR 'OS Plot - brd' OR 'OS Plot - mam' OR 'OS Plot - mos' OR 'OS Plot - phe' OR 'OS Plot - tck' OR 'OS Plot - all' OR 'SITE')]","[REQUIRE][NAMED_LOCATION_TYPE('OS Plot - brd' OR 'OS Plot - mam' OR 'OS Plot - mos' OR 'OS Plot - phe' OR 'OS Plot - tck' OR 'OS Plot - all' OR 'SITE')]"
+div_voucher,altLatitude,"Alternate Sampling Location coordinate - latitude",real,decimalDegree,,,"[IF (IS_BLANK(plotID)), REQUIRE]"
+div_voucher,altLongitude,"Alternate Sampling Location coordinate - longitude",real,decimalDegree,,,"[IF (IS_BLANK(plotID)), REQUIRE]"
+div_voucher,altCoordinateUncertainty,"The horizontal distance (in meters) from the given altLatitude and altLongitude describing the smallest circle containing the whole of the Location. Zero is not a valid value for this term",real,meter,,,
+div_voucher,altGeodeticDatum,"Model used to measure horizontal position on the earth for alternate location coordinate",string,NA,,"[ASCII]","[IF (IS_BLANK(plotID)), REQUIRE]"
+div_voucher,altElevation,"Alternate elevation (in meters) above sea level",real,meter,,,"[IF (IS_BLANK(plotID)), REQUIRE]"
+div_voucher,altElevationUncertainty,"Alternate uncertainty in elevation values (in meters)",real,meter,,,
+div_voucher,altCoordinateSource,"Alternate method used to collect or create spatial information",string,NA,,"[ASCII]","[IF (IS_BLANK(plotID)), REQUIRE]"
+div_voucher,startDate,"The start date-time or interval during which an event occurred",dateTime,NA,"[CONVERT_TO_UTC(namedLocation)]",,"[DATE_FORMAT('YYYY-MM-DD')]"
+div_voucher,endDate,"The end date-time or interval during which an event occurred",dateTime,NA,"[CONVERT_TO_UTC(namedLocation)]",,"[DATE_FORMAT('YYYY-MM-DD')][DEFAULT_TO(startDate)][HIDDEN]"
+div_voucher,taxonID,"Species code, based on one or more sources",string,NA,,"[REQUIRE][ELEMENT_OF('PLANT','taxonID','T')]","[REQUIRE][ELEMENT_OF('PLANT','taxonID','T')]"
+div_voucher,identificationQualifier,"A standard term to express the determiner's doubts about the Identification",string,NA,,"[LOV]","[LOV]"
+div_voucher,taxonIDRemarks,"Technician notes about the specific taxon; free text comments accompanying the record",string,NA,,"[ASCII]",
+div_voucher,identificationReferences,"A list of sources (concatenated and semicolon separated) used to derive the specific taxon concept; including field guide editions, books, or versions of NEON keys used",string,NA,,"[LOV]","[LOV]"
+div_voucher,morphospeciesID,"Identifier for morphospecies",string,NA,,"[ASCII]","[ASCII][FROM_TABLE(TOS_MORPHOSPECIES)]"
+div_voucher,morphospeciesIDRemarks,"Technician notes about the morphospecies; free text comments accompanying the record",string,NA,,"[ASCII]","[ASCII]"
+div_voucher,voucherSampleID,"Unique identifier for the voucher sample",string,NA,,"[DOES_NOT_EXIST][MATCH_REGULAR_EXPRESSION('(?i)pla.([A-Z]{4}).(20|21)[0-9][0-9](0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01]).(0[0-9]|[1][0-9]|2[0-3]):[0-5][0-9].([A-Z]{2,3}).V')]","['pla.' + siteID +  '.' + startDate + '.' + collectTime + '.' + [a-z]{2,3} + '.V' + .*]"
+div_voucher,voucherSampleFate,"Fate of a voucher sample",string,NA,,"[ASCII]","[HIDDEN][DEFAULT_TO('active')]"
+div_voucher,voucherSampleCode,"Barcode of a voucher sample",string,NA,,"[ASCII]","[HIDDEN]"
+div_voucher,habitatDescription,"Description of the habitat in which the event occurred",string,NA,,"[ASCII]","[ASCII]"
+div_voucher,voucherLocality,"Description of the location at which the event occurred",string,NA,,"[ASCII]","[ASCII]"
+div_voucher,plantDescription,"Description of the plant being collected for archive",string,NA,,"[ASCII]","[ASCII]"
+div_voucher,voucherLifeStage,"Life stage of the plant collected for voucher",string,NA,,"[LOV]","[LOV]"
+div_voucher,associatedTaxa,"A list of taxa associated with the taxon at the time of its collection. References to taxa are preceded by the relationship",string,NA,,"[ASCII]","[ASCII]"
+div_voucher,fulcrumVersion,"Version of the Fulcrum application used during data entry",string,NA,,"[ASCII]",
+div_voucher,platformInfo,"Operating System and browser information (where applicable) of computer used during data entry",string,NA,,"[ASCII]",
+div_voucher,tagID,"Domain-level unique identifier of tag used to mark the individual",string,NA,,"[EXISTS]",
+div_voucher,tagFate,"Fate of domain-level unique identifier used to mark the individual",string,NA,,"[IF (IS_NOT_BLANK(tagID)), 'released']","[HIDDEN]['released']"
+div_voucher,tagCode,"Code of domain-level unique identifier used to mark the individual",string,NA,,"[ASCII]","[HIDDEN]"
+div_voucher,untaggedPlantID,"Identifier for untagged plant",string,NA,,"[IF (IS_BLANK(tagID)),MATCH_REGULAR_EXPRESSION('(?i)pla.([A-Z]{4}).(20|21)[0-9][0-9](0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01]).(0[0-9]|[1][0-9]|2[0-3]):[0-5][0-9]$')]","[HIDDEN][IF (IS_BLANK(tagID)), 'pla.' + siteID + '.' + startDate + '.' + collectTime]"
+div_voucher,remarks,"Technician notes; free text comments accompanying the record",string,NA,,"[ASCII]","[ASCII]"
+div_voucher,collectedBy,"An identifier for the technician who collected the sample or specimen",string,NA,,"[ASCII]","[FROM_TABLE(PERSONNEL)]"
+div_voucher,identifiedBy,"An identifier for the technician who identified the specimen",string,NA,,"[ASCII]","[FROM_TABLE(PERSONNEL), REQUIRE]"
+div_voucher,recordedBy,"An identifier for the technician who recorded the data",string,NA,,"[ASCII]","[FROM_TABLE(PERSONNEL)]"
+div_voucher,dataQF,"Data quality flag",string,NA,,"[ASCII]",
+div_voucher,fulcrumPrimaryKey,"Primary identifier for the record in Fulcrum at the same granularity for which the record occurs in the NEON database (i.e., one fulcrumPrimaryKey should map to a single record in the NEON database)",string,NA,,"[ASCII]",
+div_geneticarchive,uid,"Unique ID within NEON database; an identifier for the record",string,NA,"[CREATE_UID]",,"[HIDDEN]"
+div_geneticarchive,locationID,"Identifier for location where sample was collected",string,NA,,"[REQUIRE][NAMED_LOCATION_TYPE('OS Plot - div' OR 'OS Plot - brd' OR 'OS Plot - mam' OR 'OS Plot - mos' OR 'OS Plot - phe' OR 'OS Plot - tck' OR 'OS Plot - all' OR 'SITE')]","[REQUIRE][NAMED_LOCATION_TYPE('OS Plot - brd' OR 'OS Plot - mam' OR 'OS Plot - mos' OR 'OS Plot - phe' OR 'OS Plot - tck' OR 'OS Plot - all' OR 'SITE')]"
+div_geneticarchive,altLatitude,"Alternate Sampling Location coordinate - latitude",real,decimalDegree,,,"[IF (IS_BLANK(plotID)), REQUIRE]"
+div_geneticarchive,altLongitude,"Alternate Sampling Location coordinate - longitude",real,decimalDegree,,,"[IF (IS_BLANK(plotID)), REQUIRE]"
+div_geneticarchive,altCoordinateUncertainty,"The horizontal distance (in meters) from the given altLatitude and altLongitude describing the smallest circle containing the whole of the Location. Zero is not a valid value for this term",real,meter,,,
+div_geneticarchive,altGeodeticDatum,"Model used to measure horizontal position on the earth for alternate location coordinate",string,NA,,"[ASCII]","[IF (IS_BLANK(plotID)), REQUIRE]"
+div_geneticarchive,altElevation,"Alternate elevation (in meters) above sea level",real,meter,,,"[IF (IS_BLANK(plotID)), REQUIRE]"
+div_geneticarchive,altElevationUncertainty,"Alternate uncertainty in elevation values (in meters)",real,meter,,,
+div_geneticarchive,altCoordinateSource,"Alternate method used to collect or create spatial information",string,NA,,"[ASCII]","[IF (IS_BLANK(plotID)), REQUIRE]"
+div_geneticarchive,startDate,"The start date-time or interval during which an event occurred",dateTime,NA,"[CONVERT_TO_UTC(namedLocation)]",,"[DATE_FORMAT('YYYY-MM-DD')]"
+div_geneticarchive,endDate,"The end date-time or interval during which an event occurred",dateTime,NA,"[CONVERT_TO_UTC(namedLocation)]",,"[DATE_FORMAT('YYYY-MM-DD')][DEFAULT_TO(startDate)][HIDDEN]"
+div_geneticarchive,collectedBy,"An identifier for the technician who collected the sample or specimen",string,NA,,"[ASCII]","[FROM_TABLE(PERSONNEL)]"
+div_geneticarchive,identifiedBy,"An identifier for the technician who identified the specimen",string,NA,,"[ASCII]","[FROM_TABLE(PERSONNEL)]"
+div_geneticarchive,recordedBy,"An identifier for the technician who recorded the data",string,NA,,"[ASCII]","[FROM_TABLE(PERSONNEL)]"
+div_geneticarchive,fulcrumVersion,"Version of the Fulcrum application used during data entry",string,NA,,"[ASCII]",
+div_geneticarchive,platformInfo,"Operating System and browser information (where applicable) of computer used during data entry",string,NA,,"[ASCII]",
+div_geneticarchive,tagID,"Domain-level unique identifier of tag used to mark the individual",string,NA,,"[EXISTS]",
+div_geneticarchive,tagFate,"Fate of domain-level unique identifier used to mark the individual",string,NA,,"[ASCII]","[HIDDEN][IF MATCH_REGULAR_EXPRESSION(sampleType, 'plant'), 'released'] [IF MATCH_REGULAR_EXPRESSION(sampleType, 'mammal'), 'processed']"
+div_geneticarchive,tagCode,"Code of domain-level unique identifier used to mark the individual",string,NA,,"[ASCII]","[HIDDEN]"
+div_geneticarchive,untaggedPlantID,"Identifier for untagged plant",string,NA,,"[ASCII]","[HIDDEN][IF (MATCH_REGULAR_EXPRESSION(sampleType, 'plant') & IS_BLANK(tagID)), 'pla.' + siteID + '.' + startDate + '.' + collectTime]"
+div_geneticarchive,taxonID,"Species code, based on one or more sources",string,NA,,"[REQUIRE][ELEMENT_OF('PLANT','taxonID','T')][ASCII]","[REQUIRE][ELEMENT_OF('PLANT','taxonID','T')]"
+div_geneticarchive,identificationQualifier,"A standard term to express the determiner's doubts about the Identification",string,NA,,"[LOV]",
+div_geneticarchive,taxonIDRemarks,"Technician notes about the specific taxon; free text comments accompanying the record",string,NA,,"[ASCII]",
+div_geneticarchive,identificationReferences,"A list of sources (concatenated and semicolon separated) used to derive the specific taxon concept; including field guide editions, books, or versions of NEON keys used",string,NA,,"[LOV]","[LOV]"
+div_geneticarchive,morphospeciesID,"Identifier for morphospecies",string,NA,,"[ASCII]","[ASCII][FROM_TABLE(TOS_MORPHOSPECIES)]"
+div_geneticarchive,morphospeciesIDRemarks,"Technician notes about the morphospecies; free text comments accompanying the record",string,NA,,"[ASCII]","[ASCII]"
+div_geneticarchive,plantCondition,"Condition of the plant from which material is collected",string,NA,,"[LOV]","[LOV]"
+div_geneticarchive,sampleType,"Type of sample",string,NA,,"[MATCH_REGULAR_EXPRESSION('plant genetic tissue archive')]",
+div_geneticarchive,sampleClass,"Class of a sample",string,NA,,"[REQUIRE][ENDS_WITH('div_geneticarchive_in.geneticSampleID')]","[REQUIRE][IF MATCH_REGULAR_EXPRESSION(sampleType, 'genetic tissue'), 'div_geneticarchive_in.geneticSampleID'][IF NOT_MATCH_REGULAR_EXPRESSION(sampleType, 'genetic tissue'), 'div_geneticarchive_in.geneticSampleID.noSample']"
+div_geneticarchive,geneticSampleID,"Identifier for the genetic sample",string,NA,,"[DOES_NOT_EXIST][MATCH_REGULAR_EXPRESSION(('(?i)gen.([A-Z]{4}).(20|21)[0-9][0-9](0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01]).(0[0-9]|[1][0-9]|2[0-3]):[0-5][0-9]') ) ]","[IF (IS_BLANK(tagID)), 'gen.' + siteID +  '.' + startDate + '.' + collectTime]"
+div_geneticarchive,geneticSampleFate,"Fate of a genetic sample",string,NA,,"[ASCII]","[HIDDEN][DEFAULT_TO('active')]"
+div_geneticarchive,geneticSampleCode,"Barcode of a genetic sample",string,NA,,"[ASCII]","[HIDDEN]"
+div_geneticarchive,remarks,"Technician notes; free text comments accompanying the record",string,NA,,"[ASCII]","[ASCII]"
+div_geneticarchive,dataQF,"Data quality flag",string,NA,,"[ASCII]",
+div_geneticarchive,fulcrumPrimaryKey,"Primary identifier for the record in Fulcrum at the same granularity for which the record occurs in the NEON database (i.e., one fulcrumPrimaryKey should map to a single record in the NEON database)",string,NA,,"[ASCII]",
