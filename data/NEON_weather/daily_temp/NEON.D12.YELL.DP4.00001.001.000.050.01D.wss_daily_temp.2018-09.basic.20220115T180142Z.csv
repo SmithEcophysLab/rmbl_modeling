@@ -1,0 +1,5 @@
+date,wssTempTripleMean,wssTempTripleMinimum,wssTempTripleMaximum,wssTempTripleVariance,wssTempTripleStdErMean,wssTempTripleNumPts,tempTripleQF
+"2018-09-27",,,,-0.0000,,0.0,1
+"2018-09-28",4.6367,-0.8511,12.9476,20.2674,0.0153,86400.0,0
+"2018-09-29",2.3045,-2.4798,8.8782,7.1151,0.0118,51390.0,1
+"2018-09-30",0.4814,-1.7277,5.9059,2.7802,0.0057,86400.0,0

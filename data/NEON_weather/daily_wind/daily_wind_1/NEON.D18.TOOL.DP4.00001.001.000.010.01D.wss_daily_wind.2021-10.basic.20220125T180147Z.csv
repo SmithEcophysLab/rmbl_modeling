@@ -1,0 +1,7 @@
+date,wssWindSpeedMean,wssWindSpeedMinimum,wssWindSpeedMaximum,wssWindSpeedVariance,wssWindSpeedStdErMean,wssWindSpeedNumPts,windSpeedQF
+"2021-10-01",0.59,0.02,2.32,0.14,0.00,23276.0,1
+"2021-10-02",,,,-0.00,,0.0,1
+"2021-10-03",,,,-0.00,,0.0,1
+"2021-10-04",,,,-0.00,,0.0,1
+"2021-10-05",,,,-0.00,,0.0,1
+"2021-10-06",,,,-0.00,,0.0,1

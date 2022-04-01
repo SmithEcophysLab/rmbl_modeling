@@ -1,0 +1,5 @@
+date,wssRHMean,wssRHMinimum,wssRHMaximum,wssRHVariance,wssRHStdErMean,wssRHNumPts,RHQF,wssDewTempMean,wssDewTempMinimum,wssDewTempMaximum,wssDewTempVariance,wssDewTempStdErMean,wssDewTempNumPts,dewTempQF
+"2018-09-27",,,,-0.00,,0.0,1,,,,-0.000,,0.0,1
+"2018-09-28",72.55,40.78,93.41,337.54,0.09,43200.0,0,-0.715,-1.991,0.786,0.663,0.004,43200.0,0
+"2018-09-29",87.23,56.10,98.21,143.11,0.06,43200.0,0,-1.350,-3.445,0.310,0.864,0.004,43200.0,0
+"2018-09-30",92.59,77.20,98.47,25.75,0.02,43200.0,0,-0.620,-2.023,2.801,1.446,0.006,43200.0,0

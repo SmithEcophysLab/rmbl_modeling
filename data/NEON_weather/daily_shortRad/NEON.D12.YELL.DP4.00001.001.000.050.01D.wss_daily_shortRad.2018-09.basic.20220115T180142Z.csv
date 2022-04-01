@@ -1,0 +1,5 @@
+date,wssShortRadMean,wssShortRadMinimum,wssShortRadMaximum,wssShortRadVariance,wssShortRadStdErMean,wssShortRadNumPts,shortRadQF
+"2018-09-27",,,,-0.00,,0.0,1
+"2018-09-28",176.72,-1.01,1148.28,71952.46,0.91,86400.0,0
+"2018-09-29",125.66,-1.52,848.81,35650.53,0.64,86400.0,0
+"2018-09-30",69.37,-1.76,691.27,12194.29,0.38,86400.0,0

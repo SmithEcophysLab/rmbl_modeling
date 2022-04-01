@@ -1,0 +1,5 @@
+date,wssWindSpeedMean,wssWindSpeedMinimum,wssWindSpeedMaximum,wssWindSpeedVariance,wssWindSpeedStdErMean,wssWindSpeedNumPts,windSpeedQF
+"2018-09-27",,,,-0.00,,0.0,1
+"2018-09-28",0.66,0.00,4.42,0.20,0.00,86372.0,0
+"2018-09-29",0.59,0.00,5.30,0.29,0.00,86377.0,0
+"2018-09-30",0.63,0.00,4.97,0.18,0.00,86373.0,0
