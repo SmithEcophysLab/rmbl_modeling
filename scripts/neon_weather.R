@@ -41,4 +41,4 @@ daily_neon_weather <- neon_weather %>%
   separate(col = "date", into = c("year", "month", "day"), sep = "[[:punct:]]") %>% 
   select("experiment", "site_id", "site", everything())
 
-write.csv(daily_neon_weather, "output/daily_neon_weather.csv")
+write.csv(daily_neon_weather, "../data/daily_neon_weather.csv")
